@@ -18,9 +18,9 @@ namespace SensioLabs\AnsiConverter\Theme;
  */
 class SolarizedTheme extends Theme
 {
-    public function asArray()
+    public function asArray(): array
     {
-        return array(
+        return [
             // normal
             'black' => '#073642',
             'red' => '#dc322f',
@@ -40,6 +40,6 @@ class SolarizedTheme extends Theme
             'brmagenta' => '#6c71c4',
             'brcyan' => '#93a1a1',
             'brwhite' => '#fdf6e3',
-        );
+        ];
     }
 }

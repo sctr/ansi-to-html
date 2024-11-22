@@ -16,9 +16,10 @@ namespace SensioLabs\AnsiConverter\Theme;
  */
 class Theme
 {
-    public function asCss($prefix = 'ansi_color')
+    public function asCss($prefix = 'ansi_color'): string
     {
-        $css = array();
+        $css = [];
+
         foreach ($this->asArray() as $name => $color) {
             $css[] = sprintf('.%s_fg_%s { color: %s }', $prefix, $name, $color);
             $css[] = sprintf('.%s_bg_%s { background-color: %s }', $prefix, $name, $color);
@@ -27,9 +28,9 @@ class Theme
         return implode("\n", $css);
     }
 
-    public function asArray()
+    public function asArray(): array
     {
-        return array(
+        return [
             'black' => 'black',
             'red' => 'darkred',
             'green' => 'green',
@@ -47,6 +48,6 @@ class Theme
             'brmagenta' => 'magenta',
             'brcyan' => 'lightcyan',
             'brwhite' => 'white',
-        );
+        ];
     }
 }

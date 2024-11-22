@@ -18,26 +18,24 @@ use SensioLabs\AnsiConverter\Theme\Theme;
  */
 class AnsiToHtmlConverter
 {
-    protected $theme;
-    protected $charset;
-    protected $inlineStyles;
-    protected $inlineColors;
-    protected $colorNames;
+    protected Theme $theme;
+    protected string $charset;
+    protected bool $inlineStyles;
+    protected array $inlineColors;
+    protected array $colorNames = [
+        'black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white', '', '',
+        'brblack', 'brred', 'brgreen', 'bryellow', 'brblue', 'brmagenta', 'brcyan', 'brwhite',
+    ];
 
-    public function __construct(Theme $theme = null, $inlineStyles = true, $charset = 'UTF-8')
+    public function __construct(?Theme $theme = null, bool $inlineStyles = true, $charset = 'UTF-8')
     {
         $this->theme = null === $theme ? new Theme() : $theme;
         $this->inlineStyles = $inlineStyles;
         $this->charset = $charset;
         $this->inlineColors = $this->theme->asArray();
-        $this->colorNames = array(
-            'black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white',
-            '', '',
-            'brblack', 'brred', 'brgreen', 'bryellow', 'brblue', 'brmagenta', 'brcyan', 'brwhite',
-        );
     }
 
-    public function convert($text)
+    public function convert($text): string
     {
         // remove cursor movement sequences
         $text = preg_replace('#\e\[(K|s|u|2J|2K|\d+(A|B|C|D|E|F|G|J|K|S|T)|\d+;\d+(H|f))#', '', $text);
@@ -80,18 +78,15 @@ class AnsiToHtmlConverter
             $html = sprintf('<span class="ansi_color_bg_black ansi_color_fg_white">%s</span>', $html);
         }
 
-        // remove empty span
-        $html = preg_replace('#<span[^>]*></span>#', '', $html);
-
-        return $html;
+        return preg_replace('#<span[^>]*></span>#', '', $html);;
     }
 
-    public function getTheme()
+    public function getTheme(): Theme
     {
         return $this->theme;
     }
 
-    protected function convertAnsiToColor($ansi)
+    protected function convertAnsiToColor($ansi): string
     {
         $bg = 0;
         $fg = 7;
@@ -135,21 +130,23 @@ class AnsiToHtmlConverter
         }
     }
 
-    protected function tokenize($text)
+    protected function tokenize(string $text): array
     {
-        $tokens = array();
+        $tokens = [];
+
         preg_match_all("/(?:\e\[(.*?)m|(\x08))/", $text, $matches, PREG_OFFSET_CAPTURE);
 
         $offset = 0;
         foreach ($matches[0] as $i => $match) {
             if ($match[1] - $offset > 0) {
-                $tokens[] = array('text', substr($text, $offset, $match[1] - $offset));
+                $tokens[] = ['text', substr($text, $offset, $match[1] - $offset)];
             }
-            $tokens[] = array("\x08" == $match[0] ? 'backspace' : 'color', $matches[1][$i][0]);
+            $tokens[] = ["\x08" == $match[0] ? 'backspace' : 'color', $matches[1][$i][0]];
             $offset = $match[1] + strlen($match[0]);
         }
+
         if ($offset < strlen($text)) {
-            $tokens[] = array('text', substr($text, $offset));
+            $tokens[] = ['text', substr($text, $offset)];
         }
 
         return $tokens;

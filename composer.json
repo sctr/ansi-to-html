@@ -10,10 +10,11 @@
         }
     ],
     "require": {
-        "php": ">=7.2.5"
+        "php": ">=7.4"
     },
     "require-dev": {
-        "twig/twig": "^2.4 || ^3.0"
+        "twig/twig": "^2.4 || ^3.0",
+        "vimeo/psalm": "^5.26"
     },
     "suggest": {
         "twig/twig": "Provides nice templating features"

@@ -9,11 +9,11 @@ use Twig\TwigFunction;
 
 class AnsiExtension extends AbstractExtension
 {
-    /** @var AnsiToHtmlConverter */
-    private $converter;
+    private ?AnsiToHtmlConverter $converter;
 
-    public function __construct(AnsiToHtmlConverter $converter = null)
-    {
+    public function __construct(
+        ?AnsiToHtmlConverter $converter = null
+    ) {
         $this->converter = $converter ?: new AnsiToHtmlConverter();
     }
 
